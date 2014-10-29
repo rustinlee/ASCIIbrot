@@ -1,0 +1,8 @@
+name: ASCIIbrot
+description: generates a mandelbrot set rendered in beautiful ASCII
+dependencies:
+  browser: any
+  viltage:
+    git:
+      ref: master
+      url: https://github.com/rustinlee/VilTAGE.git
