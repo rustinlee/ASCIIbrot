@@ -5,6 +5,8 @@ import 'package:viltage/viltage.dart';
 import 'complex.dart';
 
 CanvasElement testCanvas = querySelector('#test1');
+CanvasElement consoleCanvas = querySelector('#console');
+HtmlElement di = querySelector('#di');
 Entity fractalRect;
 int maxIter = 32;
 Complex power = new Complex(2.0, 0.0);
@@ -32,12 +34,7 @@ Entity initFractalEntity(VilTAGE v, int w, int h) {
   return e;
 }
 
-void main() {
-  VilTAGEConfig vtc = new VilTAGEConfig(querySelector('#console'), 640, 480);
-  vtc.width = 64;
-  vtc.height = 48;
-  VilTAGE viltage = new VilTAGE(vtc);
-  fractalRect = initFractalEntity(viltage, vtc.width, vtc.height);
+void drawFractalASCII(VilTAGEConfig vtc) {
   for (int y = 0; y < vtc.height; y++) {
     for (int x = 0; x < vtc.width; x++) {
       double c = mandelbrot(new Complex(x / vtc.width / size.x + offset.x, y / vtc.height / size.y + offset.y));
@@ -60,7 +57,57 @@ void main() {
       fractalRect.states[0].charNodes[y * vtc.width + x].char = newChar;
     }
   }
+}
+
+void main() {
+  VilTAGEConfig vtc = new VilTAGEConfig(consoleCanvas, 640, 640);
+  vtc.width = 64;
+  vtc.height = 64;
+  VilTAGE viltage = new VilTAGE(vtc);
+  fractalRect = initFractalEntity(viltage, vtc.width, vtc.height);
+
   generateFractal(mandelbrot, true);
+  drawFractalASCII(vtc);
+  
+  bool mouseDown = false;
+  int x1, y1, x2;
+  consoleCanvas.onMouseDown.listen((MouseEvent me) {
+    mouseDown = true;
+    
+    x1 = x2 = me.offset.x - di.offsetLeft;
+    y1 = me.page.y - di.offsetTop - di.offsetParent.offsetTop;
+  });
+  
+  consoleCanvas.onMouseMove.listen((MouseEvent me) {
+    if (mouseDown) {
+      x2 = me.offset.x - di.offsetLeft;
+    }
+  });
+  
+  consoleCanvas.onMouseUp.listen((MouseEvent me) {
+    mouseDown = false;
+    
+    int x = math.min(x1,  x2);
+    int y = math.min(y1, y1 + x2 - x1);
+    int w = math.max(x1, x2) - math.min(x1, x2);
+    
+    if (w > 10) {
+      double d = w / consoleCanvas.width;
+      
+      offset.x += x / consoleCanvas.width / size.x;
+      offset.y += y / consoleCanvas.height / size.y;
+      
+      size.x /= d;
+      size.y /= d;
+      
+      generateFractal(lastFormula, true);
+      drawFractalASCII(vtc);
+    }
+  });
+  
+  consoleCanvas.onMouseOut.listen((MouseEvent me) {
+    mouseDown = false;
+  });
 }
 
 double mandelbrot (Complex xy) {
