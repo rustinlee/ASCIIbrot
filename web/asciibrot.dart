@@ -9,7 +9,8 @@ CanvasElement consoleCanvas = querySelector('#console');
 HtmlElement di = querySelector('#di');
 Entity fractalRect;
 int maxIter = 32;
-Complex power = new Complex(2.0, 0.0);
+num powerReal = 2.0;
+Complex power = new Complex(powerReal, 0.0);
 double bailout = 4.0;
 Complex offset = new Complex(-3.0, -2.0);
 Complex size = new Complex(0.25, 0.25);
@@ -59,11 +60,22 @@ void drawFractalASCII(VilTAGEConfig vtc) {
   }
 }
 
+VilTAGEConfig vtc;
+VilTAGE viltage;
+bool ticking = false;
+
+void update(num delta) {
+  num deltaSin = math.sin(delta*0.001);
+  power = new Complex(powerReal + 0.5 * deltaSin, 0.0);
+  drawFractalASCII(vtc);
+  window.animationFrame.then(update);
+}
+
 void main() {
-  VilTAGEConfig vtc = new VilTAGEConfig(consoleCanvas, 640, 640);
+  vtc = new VilTAGEConfig(consoleCanvas, 640, 640);
   vtc.width = 64;
   vtc.height = 64;
-  VilTAGE viltage = new VilTAGE(vtc);
+  viltage = new VilTAGE(vtc);
   fractalRect = initFractalEntity(viltage, vtc.width, vtc.height);
 
   generateFractal(mandelbrot, true);
@@ -108,6 +120,8 @@ void main() {
   consoleCanvas.onMouseOut.listen((MouseEvent me) {
     mouseDown = false;
   });
+  
+  window.animationFrame.then(update);
 }
 
 double mandelbrot (Complex xy) {
