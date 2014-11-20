@@ -78,7 +78,7 @@ void main() {
   viltage = new VilTAGE(vtc);
   fractalRect = initFractalEntity(viltage, vtc.width, vtc.height);
 
-  generateFractal(mandelbrot, true);
+  //generateFractal(mandelbrot, true);
   drawFractalASCII(vtc);
   
   bool mouseDown = false;
@@ -112,7 +112,7 @@ void main() {
       size.x /= d;
       size.y /= d;
       
-      generateFractal(lastFormula, true);
+      //generateFractal(lastFormula, true);
       drawFractalASCII(vtc);
     }
   });

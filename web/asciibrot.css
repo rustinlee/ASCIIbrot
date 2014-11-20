@@ -21,3 +21,7 @@ div#sample_container_id {
   border: 1px solid #ccc;
   background-color: #fff;
 }
+
+canvas#test1 {
+  display: none;
+}
