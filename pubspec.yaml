@@ -4,5 +4,5 @@ dependencies:
   browser: any
   viltage:
     git:
-      ref: master
+      ref: 141872d37ae64aab72e3f915ca670f5e660ab174
       url: https://github.com/ViliX64/VilTAGE.git
