@@ -7,6 +7,7 @@ import 'complex.dart';
 CanvasElement testCanvas = querySelector('#test1');
 CanvasElement consoleCanvas = querySelector('#console');
 HtmlElement di = querySelector('#di');
+InputElement speedSlider = querySelector('#speed-slider');
 Entity fractalRect;
 int maxIter = 32;
 num powerReal = 2.0;
@@ -63,12 +64,24 @@ void drawFractalASCII(VilTAGEConfig vtc) {
 VilTAGEConfig vtc;
 VilTAGE viltage;
 bool ticking = false;
+double speedMod = 1.0;
 
 void update(num delta) {
-  num deltaSin = math.sin(delta*0.001);
+  num deltaSin = math.sin(delta * 0.001 * speedMod);
   power = new Complex(powerReal + 0.5 * deltaSin, 0.0);
   drawFractalASCII(vtc);
   window.animationFrame.then(update);
+}
+
+double logSlider(int position) {
+  int minp = 0;
+  int maxp = 100;
+  
+  double minv = math.log(0.1);
+  double maxv = math.log(10);
+  
+  double scale = (maxv - minv) / (maxp - minp);
+  return math.exp(minv + scale * (position - minp));
 }
 
 void main() {
@@ -119,6 +132,10 @@ void main() {
   
   consoleCanvas.onMouseOut.listen((MouseEvent me) {
     mouseDown = false;
+  });
+  
+  speedSlider.onChange.listen((Event e) {
+    speedMod = logSlider(int.parse(speedSlider.value));
   });
   
   window.animationFrame.then(update);
