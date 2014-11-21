@@ -91,7 +91,9 @@ double logSlider(int position) {
 }
 
 void main() {
-  vtc = new VilTAGEConfig(consoleCanvas, 640, 640);
+  vtc = new VilTAGEConfig(consoleCanvas);
+  vtc.canvasWidth = 640;
+  vtc.canvasHeight = 640;
   vtc.width = 64;
   vtc.height = 64;
   viltage = new VilTAGE(vtc);

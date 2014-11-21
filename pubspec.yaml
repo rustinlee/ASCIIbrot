@@ -5,4 +5,4 @@ dependencies:
   viltage:
     git:
       ref: master
-      url: https://github.com/rustinlee/VilTAGE.git
+      url: https://github.com/ViliX64/VilTAGE.git
