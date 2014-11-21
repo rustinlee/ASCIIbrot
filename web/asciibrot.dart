@@ -65,9 +65,15 @@ VilTAGEConfig vtc;
 VilTAGE viltage;
 bool ticking = false;
 double speedMod = 1.0;
+num lastTimeSinceStarted = 0;
+num delta; //unmodified frame to frame delta time
+num animTime = 0; //modified startup delta used to drive animation speed
 
-void update(num delta) {
-  num deltaSin = math.sin(delta * 0.001 * speedMod);
+void update(num timeSinceStarted) {
+  delta = lastTimeSinceStarted - timeSinceStarted;
+  lastTimeSinceStarted = timeSinceStarted;
+  animTime += delta * speedMod;
+  num deltaSin = math.sin(animTime * 0.001);
   power = new Complex(powerReal + 0.5 * deltaSin, 0.0);
   drawFractalASCII(vtc);
   window.animationFrame.then(update);
